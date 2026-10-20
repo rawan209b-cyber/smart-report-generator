@@ -35,16 +35,62 @@ function htmlForReport(report,options={}){
     ${report.nextSteps?.length?`<section><h2>الخطوات القادمة</h2><ul>${report.nextSteps.map(p=>`<li>${e(p)}</li>`).join('')}</ul></section>`:''}
     ${report.conclusion?`<section><h2>الخاتمة</h2><div class="ending"><p>${e(report.conclusion)}</p></div></section>`:''}</body></html>`;
 }
-async function createPdfReport(report,options={}){
-  const browser=await puppeteer.launch({executablePath:findChrome(),headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});
-  try{
-    const page=await browser.newPage();
-    await page.setContent(htmlForReport(report,options),{waitUntil:'load'});
-    await page.evaluate(()=>document.fonts.ready);
-    const pdf=await page.pdf({format:'A4',printBackground:true,displayHeaderFooter:true,
-      headerTemplate:'<span></span>',footerTemplate:'<div style="font:9px Arial;width:100%;text-align:center;color:#777"> <span class="pageNumber"></span> / <span class="totalPages"></span></div>',
-      margin:{top:'19mm',right:'17mm',bottom:'18mm',left:'17mm'}});
-    return Buffer.from(pdf);
-  }finally{await browser.close();}
+
+async function createPdfReport(report, options = {}) {
+    const browser = await puppeteer.launch({
+        executablePath: findChrome(),
+        headless: true,
+        args: ['--disable-dev-shm-usage'],
+        timeout: 30000
+    });
+
+    try {
+        const page = await browser.newPage();
+
+        // Prevent the PDF browser from accessing external resources.
+        await page.setRequestInterception(true);
+
+        page.on('request', request => {
+            const url = request.url();
+
+            if (url.startsWith('data:') || url === 'about:blank') {
+                request.continue();
+            } else {
+                request.abort();
+            }
+        });
+
+        await page.setJavaScriptEnabled(false);
+
+        await page.setContent(
+            htmlForReport(report, options),
+            { waitUntil: 'load', timeout: 30000 }
+        );
+
+        await page.evaluate(() => document.fonts.ready);
+
+        const pdf = await page.pdf({
+            format: 'A4',
+            printBackground: true,
+            displayHeaderFooter: true,
+            headerTemplate: '<span></span>',
+            footerTemplate: `
+                <div style="font:9px Arial;width:100%;text-align:center;color:#777">
+                    <span class="pageNumber"></span> /
+                    <span class="totalPages"></span>
+                </div>
+            `,
+            margin: {
+                top: '19mm',
+                right: '17mm',
+                bottom: '18mm',
+                left: '17mm'
+            },
+            timeout: 30000
+        });
+
+        return Buffer.from(pdf);
+    } finally {
+        await browser.close();
+    }
 }
-module.exports={createPdfReport};
