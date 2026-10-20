@@ -1,0 +1,7 @@
+{
+  "name": "smart-report-generator", "version": "2.0.0", "private": true,
+  "description": "Arabic AI report generator",
+  "main": "server.js", "type": "commonjs",
+  "scripts": {"start": "node server.js", "dev": "node --watch server.js"},
+  "dependencies": {"@google/genai": "^2.24.0", "dotenv": "^18.0.4", "express": "^5.2.1", "multer": "^2.4.0", "docx": "^9.7.2", "pptxgenjs": "^4.0.1", "puppeteer-core": "^24.20.0", "sharp": "^0.34.0"}
+}

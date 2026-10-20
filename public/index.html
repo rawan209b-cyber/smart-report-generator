@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>مولد التقارير الذكي</title><link rel="stylesheet" href="style.css"></head>
+<body><main class="container">
+  <header class="hero"><span>SMART REPORT GENERATOR</span><h1>مولد التقارير الذكي</h1><p>حوّلي أفكارك إلى تقارير عربية منظمة، وراجعيها قبل تحميلها.</p></header>
+  <section class="panel"><h2>١. محتوى التقرير</h2><label for="notes">اكتبي الموضوع أو الملاحظات</label><textarea id="notes" placeholder="مثال: تدربت في قسم الشبكات وتعرفت على أنواع الشبكات وأجهزة الربط..."></textarea>
+  <div class="controls"><div><label for="theme">قالب التصميم</label><select id="theme"><option value="formal">رسمي</option><option value="academic">أكاديمي</option><option value="modern">عصري</option><option value="technical">تقني</option></select></div>
+  <div><label for="detail">مستوى التفصيل</label><select id="detail"><option value="brief">مختصر</option><option value="normal" selected>متوسط</option><option value="detailed">مفصل</option></select></div></div>
+  <button id="previewBtn" type="button">إنشاء التقرير ومعاينته</button></section>
+  <section class="panel" id="editorSection" hidden><h2>٢. مراجعة التقرير وتعديله</h2><p class="muted">يمكنك تعديل العناوين والفقرات قبل التحميل. هذه معاينة للمحتوى وليست مطابقة تمامًا لتنسيق الملف النهائي.</p><div id="editor"></div></section>
+  <section class="panel" id="exportSection" hidden><h2>٣. الصور والتصدير</h2><label for="reportImages">إضافة صور من جهازك (حتى 8 صور)</label><input type="file" id="reportImages" accept="image/png,image/jpeg" multiple><div id="imagesPreview" class="image-grid"></div>
+  <label for="format">صيغة الملف</label><select id="format"><option value="docx">Word — DOCX</option><option value="pdf">PDF</option><option value="pptx">PowerPoint — PPTX</option></select>
+  <button id="exportBtn" type="button">تحميل التقرير</button></section>
+  <div id="status" role="status" aria-live="polite"></div>
+</main><script src="script.js"></script></body></html>
